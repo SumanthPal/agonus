@@ -1,0 +1,58 @@
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment
+.env
+.env.local
+*.secret
+*.env
+*.claude
+
+# Trading bot (NEVER COMMIT PRIVATE KEYS)
+backend/trading-bot/.env
+backend/trading-bot/node_modules/
+backend/trading-bot/temp_swap.ts
+trading-bot/.env
+trading-bot/node_modules/
+trading-bot/temp_swap.ts
+
+# Build outputs
+.next/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Smart contracts
+contracts/artifacts/
+contracts/cache/
+contracts/node_modules/
+
+# Keys (NEVER COMMIT)
+*.pem
+*.key
+wallets/
+secrets/
+
+**/.history/
+#Table Deployment
+backend/app/db/deploy_tables.py
+
