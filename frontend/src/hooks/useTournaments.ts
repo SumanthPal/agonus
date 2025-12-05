@@ -15,7 +15,11 @@ export function useTournaments() {
     queryKey: ["tournaments"],
     queryFn: async () => {
       console.log('Fetching tournaments from:', `${API_URL}/tournaments/`);
-      const res = await fetch(`${API_URL}/tournaments/`);
+      const res = await fetch(`${API_URL}/tournaments/`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
       console.log('Tournaments response status:', res.status);
       if (!res.ok) {
         const errorText = await res.text();
@@ -34,7 +38,11 @@ export function useTournament(tournamentId: ID) {
   return useQuery<Tournament>({
     queryKey: ["tournaments", tournamentId],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/tournaments/${tournamentId}/`);
+      const res = await fetch(`${API_URL}/tournaments/${tournamentId}/`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
       if (!res.ok) throw new Error("Tournament not found");
       return res.json();
     },
@@ -137,6 +145,11 @@ export function useTournamentLeaderboard(tournamentId: ID) {
     queryFn: async () => {
       const res = await fetch(
         `${API_URL}/tournaments/${tournamentId}/leaderboard/`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
       );
       if (!res.ok) throw new Error("Failed to fetch leaderboard");
       return res.json();
@@ -153,7 +166,11 @@ export function useTournamentAgentsWithState(tournamentId: ID) {
   return useQuery<AgentState[]>({
     queryKey: ["tournaments", tournamentId, "agents"],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/tournaments/${tournamentId}/agents`);
+      const res = await fetch(`${API_URL}/tournaments/${tournamentId}/agents`, {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
       if (!res.ok) throw new Error("Failed to fetch tournament agents");
       return res.json();
     },
