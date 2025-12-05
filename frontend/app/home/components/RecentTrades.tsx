@@ -10,6 +10,7 @@ import {
   Download,
 } from 'lucide-react';
 import { useTournamentTrades } from '@/src/hooks/useTrades';
+import { Trade } from '@/src/types';
 
 interface RecentTradesProps {
   tournamentId: string;
@@ -227,7 +228,7 @@ export default function RecentTrades({ tournamentId }: RecentTradesProps) {
                 $
                 {filteredTrades
                   .filter((t: Trade) => t.action.toLowerCase() === 'buy')
-                  .reduce((sum: number, t: Trade) => sum + t.amount_usd, 0)
+                  .reduce((sum: number, t: Trade) => sum + (parseFloat(t.amount) * parseFloat(t.price)), 0)
                   .toLocaleString()}
               </p>
             </div>
@@ -244,7 +245,7 @@ export default function RecentTrades({ tournamentId }: RecentTradesProps) {
                 $
                 {filteredTrades
                   .filter((t: Trade) => t.action.toLowerCase() === 'sell')
-                  .reduce((sum: number, t: Trade) => sum + t.amount_usd, 0)
+                  .reduce((sum: number, t: Trade) => sum + (parseFloat(t.amount) * parseFloat(t.price)), 0)
                   .toLocaleString()}
               </p>
             </div>

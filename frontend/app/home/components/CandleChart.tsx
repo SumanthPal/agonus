@@ -1,16 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  TrendingUp,
-  Maximize2,
-  Minimize2,
-  Plus,
-} from 'lucide-react';
-import { getOhlcvByTournament } from '../data/mockOhlcv';
-import type { UTCTimestamp, ISeriesApi, IChartApi } from 'lightweight-charts';
-import { CandlestickSeries } from 'lightweight-charts';
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { TrendingUp, Maximize2, Minimize2, Plus } from "lucide-react";
+import { getOhlcvByTournament } from "../data/mockOhlcv";
+import type { UTCTimestamp, ISeriesApi, IChartApi } from "lightweight-charts";
+import { CandlestickSeries } from "lightweight-charts";
 
 /* ----------------------------- Types ----------------------------- */
 
@@ -60,33 +55,35 @@ function aggregateOhlc(data: OhlcCandle[], groupSize: number): OhlcCandle[] {
 }
 
 const timeframeMap: Record<string, number> = {
-  '1m': 1,   // mock fallback (still 5m resolution)
-  '5m': 1,
-  '15m': 3,
-  '1h': 12,
-  '4h': 48,
-  '1d': 288,
+  "1m": 1, // mock fallback (still 5m resolution)
+  "5m": 1,
+  "15m": 3,
+  "1h": 12,
+  "4h": 48,
+  "1d": 288,
 };
 
 /* --------------------------- Component --------------------------- */
 
 export default function CandleChart({ tournamentId }: CandleChartProps) {
   const chartContainerRef = useRef<HTMLDivElement | null>(null);
-  const [timeframe, setTimeframe] = useState<'1m' | '5m' | '15m' | '1h' | '4h' | '1d'>('1h');
+  const [timeframe, setTimeframe] = useState<
+    "1m" | "5m" | "15m" | "1h" | "4h" | "1d"
+  >("1h");
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // raw mock data typed
-  const rawData = getOhlcvByTournament(tournamentId) as OhlcCandle[];
+  const rawData = getOhlcvByTournament(Number(tournamentId)) as OhlcCandle[];
   const groupSize = timeframeMap[timeframe] ?? 1;
   const ohlcv = aggregateOhlc(rawData, groupSize);
 
   // ESC exits fullscreen
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsFullscreen(false);
+      if (e.key === "Escape") setIsFullscreen(false);
     };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
   useEffect(() => {
@@ -94,42 +91,42 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
     if (!container || ohlcv.length === 0) return;
 
     let chart: IChartApi | null = null;
-    let series: ISeriesApi<'Candlestick'> | null = null;
+    let series: ISeriesApi<"Candlestick"> | null = null;
 
     // lightweight-charts dynamically imported only on client
-    import('lightweight-charts').then((LightweightCharts) => {
+    import("lightweight-charts").then((LightweightCharts) => {
       if (!chartContainerRef.current) return;
 
       const ctn = chartContainerRef.current;
 
       // clear old canvases (prevents double charts)
-      ctn.innerHTML = '';
+      ctn.innerHTML = "";
 
       chart = LightweightCharts.createChart(ctn, {
         width: ctn.clientWidth,
         height: isFullscreen ? window.innerHeight - 100 : 400,
         layout: {
-          background: { color: 'transparent' },
-          textColor: '#9ca3af',
+          background: { color: "transparent" },
+          textColor: "#9ca3af",
         },
         grid: {
-          vertLines: { color: 'rgba(255,255,255,0.05)' },
-          horzLines: { color: 'rgba(255,255,255,0.05)' },
+          vertLines: { color: "rgba(255,255,255,0.05)" },
+          horzLines: { color: "rgba(255,255,255,0.05)" },
         },
         timeScale: {
           timeVisible: true,
-          borderColor: 'rgba(255,255,255,0.1)' as string,
+          borderColor: "rgba(255,255,255,0.1)" as string,
         },
         rightPriceScale: {
-          borderColor: 'rgba(255,255,255,0.1)' as string,
+          borderColor: "rgba(255,255,255,0.1)" as string,
         },
       });
 
       series = chart.addSeries(CandlestickSeries, {
-        upColor: '#10b981',
-        downColor: '#ef4444',
-        wickUpColor: '#10b981',
-        wickDownColor: '#ef4444',
+        upColor: "#10b981",
+        downColor: "#ef4444",
+        wickUpColor: "#10b981",
+        wickDownColor: "#ef4444",
         borderVisible: false,
       });
 
@@ -144,11 +141,11 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
         });
       };
 
-      window.addEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
 
       // cleanup for this import callback
       return () => {
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener("resize", handleResize);
         chart?.remove();
         chart = null;
         series = null;
@@ -160,12 +157,17 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
       chart?.remove();
       chart = null;
       series = null;
-      if (container) container.innerHTML = '';
+      if (container) container.innerHTML = "";
     };
   }, [isFullscreen, timeframe, tournamentId, ohlcv]);
 
-  const timeframeButtons: Array<'1m' | '5m' | '15m' | '1h' | '4h' | '1d'> = [
-    '1m', '5m', '15m', '1h', '4h', '1d',
+  const timeframeButtons: Array<"1m" | "5m" | "15m" | "1h" | "4h" | "1d"> = [
+    "1m",
+    "5m",
+    "15m",
+    "1h",
+    "4h",
+    "1d",
   ];
 
   const currentPrice = ohlcv[ohlcv.length - 1]?.close ?? 0;
@@ -179,8 +181,8 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
     <div
       className={
         isFullscreen
-          ? 'fixed inset-0 z-50 bg-[#000814]/90 backdrop-blur-xl p-6 flex items-center justify-center'
-          : 'relative'
+          ? "fixed inset-0 z-50 bg-[#000814]/90 backdrop-blur-xl p-6 flex items-center justify-center"
+          : "relative"
       }
     >
       <motion.div
@@ -199,17 +201,19 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">Portfolio Value</h3>
-              <p className="text-xs text-gray-400">Tournament #{tournamentId}</p>
+              <p className="text-xs text-gray-400">
+                Tournament #{tournamentId}
+              </p>
               <div className="flex items-center gap-3 mt-1">
                 <p className="text-2xl font-bold text-[#FFD700]">
                   ${currentPrice.toFixed(2)}
                 </p>
                 <span
                   className={`flex items-center gap-1 text-sm font-semibold ${
-                    change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                    change24h >= 0 ? "text-green-400" : "text-red-400"
                   }`}
                 >
-                  {change24h >= 0 ? '↗' : '↘'}
+                  {change24h >= 0 ? "↗" : "↘"}
                   {Math.abs(change24h).toFixed(2)}%
                 </span>
               </div>
@@ -225,8 +229,8 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
                   onClick={() => setTimeframe(tf)}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                     timeframe === tf
-                      ? 'bg-[#FFD700] text-[#001D3D]'
-                      : 'text-gray-400 hover:text-white hover:bg-white/10'
+                      ? "bg-[#FFD700] text-[#001D3D]"
+                      : "text-gray-400 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {tf}
@@ -253,7 +257,7 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
         <div
           ref={chartContainerRef}
           className={`relative bg-black/20 w-full ${
-            isFullscreen ? 'h-[80vh]' : 'h-[400px]'
+            isFullscreen ? "h-[80vh]" : "h-[400px]"
           }`}
         />
 
@@ -272,10 +276,10 @@ export default function CandleChart({ tournamentId }: CandleChartProps) {
                 <p className="text-xs text-gray-400 uppercase">24h Change</p>
                 <p
                   className={`text-lg font-bold ${
-                    change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                    change24h >= 0 ? "text-green-400" : "text-red-400"
                   }`}
                 >
-                  {change24h >= 0 ? '+' : ''}
+                  {change24h >= 0 ? "+" : ""}
                   {change24h.toFixed(2)}%
                 </p>
               </div>
