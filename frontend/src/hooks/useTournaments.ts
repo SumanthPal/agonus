@@ -14,8 +14,8 @@ export function useTournaments() {
   return useQuery<Tournament[]>({
     queryKey: ["tournaments"],
     queryFn: async () => {
-      console.log("Fetching tournaments from:", `${API_URL}/tournaments/`);
-      const res = await fetch(`${API_URL}/tournaments/`, {
+      console.log("Fetching tournaments from:", `${API_URL}/tournaments`);
+      const res = await fetch(`${API_URL}/tournaments`, {
         headers: {
           "ngrok-skip-browser-warning": "true",
         },
@@ -38,7 +38,7 @@ export function useTournament(tournamentId: ID) {
   return useQuery<Tournament>({
     queryKey: ["tournaments", tournamentId],
     queryFn: async () => {
-      const res = await fetch(`${API_URL}/tournaments/${tournamentId}/`, {
+      const res = await fetch(`${API_URL}/tournaments/${tournamentId}`, {
         headers: {
           "ngrok-skip-browser-warning": "true",
         },
@@ -144,7 +144,7 @@ export function useTournamentLeaderboard(tournamentId: ID) {
     queryKey: ["tournaments", tournamentId, "leaderboard"],
     queryFn: async () => {
       const res = await fetch(
-        `${API_URL}/tournaments/${tournamentId}/leaderboard/`,
+        `${API_URL}/tournaments/${tournamentId}/leaderboard`,
         {
           headers: {
             "ngrok-skip-browser-warning": "true",
